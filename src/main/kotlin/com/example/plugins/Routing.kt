@@ -3,11 +3,19 @@ package com.example.plugins
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import com.example.handlers.*
 
 fun Application.configureRouting() {
+    val loginHandler = LoginHandler()
+    val userInfoHandler = UserInfoHandler()
+
     routing {
         post("/login") {
-            call.respondText("Hello World!")
+            loginHandler.handle(call)
+        }
+
+        get("/userinfo") {
+            userInfoHandler.handle(call)
         }
     }
 }
