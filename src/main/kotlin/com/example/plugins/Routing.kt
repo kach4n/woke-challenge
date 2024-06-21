@@ -15,7 +15,8 @@ fun Application.configureRouting() {
         }
 
         get("/userinfo") {
-            userInfoHandler.handle(call)
+            call.respondText("ok")
+            //userInfoHandler.handle(call)
         }
     }
 }

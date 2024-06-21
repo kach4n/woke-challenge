@@ -1,21 +1,28 @@
 package com.example.handlers
 
+import com.example.LoginData
+import com.example.LoginResponse
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import io.ktor.http.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 
 class LoginHandler {
     suspend fun handle(call: ApplicationCall) {
-        val parameters = call.receiveParameters()
-        val username = parameters["username"] ?: return call.respondText("Missing username", status = HttpStatusCode.BadRequest)
-        val password = parameters["password"] ?: return call.respondText("Missing password", status = HttpStatusCode.BadRequest)
+        val parameters = call.receive<LoginData>()
+        println("Received login data: $parameters")
+        val username = parameters.username
+        val password = parameters.password
 
         // Placeholder logic for authentication
         if (username == "user" && password == "password") {
-            call.respondText("Login successful")
+            val response = LoginResponse("Login successful")
+            call.respondText(Json.encodeToString(response), ContentType.Application.Json)
         } else {
-            call.respondText("Invalid credentials", status = HttpStatusCode.Unauthorized)
+            val response = LoginResponse("Invalid credentials")
+            call.respondText(Json.encodeToString(response), ContentType.Application.Json)
         }
     }
 }
