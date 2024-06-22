@@ -27,11 +27,17 @@ class LoginHandler {
         val email = parameters.email
         val password = parameters.password
 
-        return transaction {
-                User.select {
-                    (User.email eq email) and (User.password eq password)
-                }.count() > 0
-            }
+        val userExists = transaction {
+            User.select {
+                (User.email eq email) and (User.password eq password)
+            }.count() > 0
+        }
+
+        if (userExists) {
+            call.respond(HttpStatusCode.OK, "Login successful")
+        } else {
+            call.respond(HttpStatusCode.Unauthorized, "Invalid email or password")
+        }
 
     }
 }
