@@ -15,6 +15,8 @@ fun main(args: Array<String>) {
 
 @Suppress("unused")
 fun Application.module() {
+    DatabaseConfig.connect()
+
     install(ContentNegotiation) {
         json(Json {
             prettyPrint = true
