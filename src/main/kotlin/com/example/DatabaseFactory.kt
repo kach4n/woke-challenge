@@ -19,5 +19,4 @@ object User : Table("user") {
     val password = varchar("password", length = 255)
     val phone_number = varchar("phone_number", length = 255)
     val birth_date = varchar("birth_date", length = 255)
-
 }

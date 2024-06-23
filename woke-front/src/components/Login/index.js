@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
+import Cookies from 'js-cookie';
+
 
 const Login = ({ onLogin }) => {
     const [email, setEmail] = useState('');
@@ -25,8 +27,24 @@ const Login = ({ onLogin }) => {
             const { message } = await response.json();
             console.log(message);
 
-            onLogin(message); // Assuming message is your token
-            alert('Login efetuado com sucesso!');
+            // Fetch user data
+            const userResponse = await fetch('http://localhost:8080/user', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+                },
+                credentials: 'include'
+            });
+
+            if (!userResponse.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+
+            const userData = await userResponse.json();
+            console.log(userData);
+
+            onLogin(userData); // Pass user data to parent component
+            alert('Login successful!');
         } catch (error) {
             console.error('Login error:', error);
             alert('Invalid username or password. Please try again.');
