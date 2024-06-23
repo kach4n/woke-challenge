@@ -39,4 +39,8 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-core", "0.38.1")
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.38.1")
     implementation("org.jetbrains.exposed", "exposed-dao", "0.38.1")
+
+    implementation("io.ktor:ktor-server-auth-jwt:2.0.0") // Adjust the version accordingly
+    implementation("io.ktor:ktor-server-auth:2.0.0")
+    implementation("com.auth0:java-jwt:3.18.2")
 }

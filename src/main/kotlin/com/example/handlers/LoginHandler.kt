@@ -8,6 +8,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import io.ktor.http.*
+import com.example.utils.JwtConfig
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -34,10 +35,19 @@ class LoginHandler {
         }
 
         if (userExists) {
-            call.respond(HttpStatusCode.OK, "Login successful")
+            val token = JwtConfig.generateToken(email)
+            call.response.cookies.append(
+                Cookie(
+                    name = "auth_token",
+                    value = token,
+                    httpOnly = true,
+                    secure = false,
+                    path = "/"
+                )
+            )
+            call.respond(HttpStatusCode.OK, LoginResponse("Login efetuado com sucesso"))
         } else {
-            call.respond(HttpStatusCode.Unauthorized, "Invalid email or password")
+            call.respond(HttpStatusCode.Unauthorized, LoginResponse("Email ou senha incorretos"))
         }
-
     }
 }
