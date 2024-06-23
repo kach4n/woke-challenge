@@ -31,6 +31,4 @@ fun Application.module() {
 
     configureRouting()
     configureSecurity()
-
-    // Define your routes and other configuration here
 }
