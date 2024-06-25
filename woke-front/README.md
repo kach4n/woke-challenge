@@ -1,70 +1,31 @@
-# Getting Started with Create React App
+Como executar o projeto:
+-
+Deixei os dois códigos (back e front) no mesmo projeto apenas para facilitar o envio; eles são independentes.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Você precisa ter o Node e o React instalados na máquina para o frontend.
 
-## Available Scripts
+Para o backend, recomendo rodar pelo IntelliJ executando a função main() do Application.kt. Não esqueça de sincronizar o Gradle antes. Eu usei o JDK OpenJDK 21.
 
-In the project directory, you can run:
+Para rodar o frontend, execute (estando na pasta woke-front) npm i e depois npm start.
 
-### `npm start`
+(Se as portas 8080 ou 3000 já estiverem sendo usadas na máquina que vai executar o projeto, haverá erro).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Justificativa Técnica:
+-
+Utilizei o framework Ktor para o backend por acreditar que seja uma opção ágil que exige pouca configuração.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Para esse desafio, optei por criar um banco de dados SQLite para não ter que mockar os usuários, portanto as verificações de email e senha são realmente funcionais.
 
-### `npm test`
+Também optei por não mockar os tokens; implementei JWT para autenticar as rotas e transportar os dados do usuário com segurança.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+A lógica da plataforma funciona assim:
 
-### `npm run build`
+- Usuário digita email e senha e manda para o backend.
+- Backend valida se email e senha refletem uma conta no banco (SQLite na raiz do projeto).
+- Se validado, cria um token JWT contendo informações encontradas no banco e salva o token nos cookies, além de avisar o React que o usuário está logado.
+- Em seguida, é feita a request de dados do usuário; essa rota valida se a assinatura do JWT é válida e, se for, monta e retorna o objeto com as claims do próprio JWT. Dessa forma, o acesso aos dados do usuário está vinculado com o fato de estar com uma sessão válida; qualquer alteração manual no cookie do JWT invalida a assinatura e os dados ficam inacessíveis.
+- Dados são renderizados pelo React.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Considerações:
+-
+No tempo que tive para trabalhar no desafio, foquei em entregar funcionalidades reais e manter o prazo que estimei (segunda-feira) ao invés de polir o código e pensar no design do front. Algumas coisas ficaram faltando, como, por exemplo, hashear a senha para guardar no banco. As nomenclaturas com certeza poderiam ser melhores.

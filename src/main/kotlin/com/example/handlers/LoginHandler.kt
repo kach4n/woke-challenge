@@ -1,22 +1,14 @@
 package com.example.handlers
 
-import com.example.DatabaseConfig
-import com.example.LoginData
-import com.example.LoginResponse
-import com.example.User
+import com.example.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import io.ktor.http.*
 import com.example.utils.JwtConfig
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.selectAll
 
 class LoginHandler {
 
@@ -24,23 +16,35 @@ class LoginHandler {
         DatabaseConfig.connect()
 
         val parameters = call.receive<LoginData>()
-        println("Received login data: $parameters")
         val email = parameters.email
         val password = parameters.password
 
-        val userExists = transaction {
-            User.select {
+        val user = transaction {
+            User.slice(
+                User.id,
+                User.name,
+                User.email,
+                User.phone_number,
+                User.birth_date).select {
                 (User.email eq email) and (User.password eq password)
-            }.count() > 0
+            }.map {
+                UserInfoResponse(
+                    it[User.id],
+                    it[User.name],
+                    it[User.email],
+                    it[User.phone_number],
+                    it[User.birth_date]
+                )
+            }.singleOrNull()
         }
 
-        if (userExists) {
-            val token = JwtConfig.generateToken(email)
+        if (user != null) {
+            val token = JwtConfig.generateToken(user)
             call.response.cookies.append(
                 Cookie(
                     name = "auth_token",
                     value = token,
-                    httpOnly = true,
+                    httpOnly = false,
                     secure = false,
                     path = "/"
                 )

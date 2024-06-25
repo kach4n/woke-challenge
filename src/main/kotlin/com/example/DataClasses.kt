@@ -9,4 +9,10 @@ data class LoginData(val email: String, val password: String)
 data class LoginResponse(val message: String)
 
 @Serializable
-data class UserResponse(val name: String, val phoneNumber: String, val birthDate: String)
+data class UserInfoResponse(
+    val id: Int,
+    val name: String,
+    val email: String,
+    val phoneNumber: String,
+    val birthDate: String
+)

@@ -17,7 +17,7 @@ const Login = ({ onLogin }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
-                credentials: 'include' // Important to include cookies in requests
+                credentials: 'include'
             });
 
             if (!response.ok) {
@@ -25,29 +25,26 @@ const Login = ({ onLogin }) => {
             }
 
             const { message } = await response.json();
-            console.log(message);
 
-            // Fetch user data
-            const userResponse = await fetch('http://localhost:8080/user', {
+            const token = Cookies.get('auth_token');
+            const userResponse = await fetch('http://localhost:8080/userinfo', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+                    'Authorization': `Bearer ${token}`,
                 },
                 credentials: 'include'
             });
 
             if (!userResponse.ok) {
-                throw new Error('Failed to fetch user data');
+                throw new Error('Falha ao obter dados do usuário');
             }
 
             const userData = await userResponse.json();
-            console.log(userData);
 
-            onLogin(userData); // Pass user data to parent component
-            alert('Login successful!');
+            onLogin(userData);
         } catch (error) {
-            console.error('Login error:', error);
-            alert('Invalid username or password. Please try again.');
+            console.error('Erro no login:', error);
+            alert('Usuário ou senha inválidos, tente novamente.');
         }
     };
 

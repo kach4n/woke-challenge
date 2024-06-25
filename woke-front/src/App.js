@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import Login from './components/Login';
 import MainPage from './components/MainPage';
+import Cookies from 'js-cookie';
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+    const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('auth_token'));
+    const [userData, setUserData] = useState('');
 
-    const handleLogin = (token) => {
-        localStorage.setItem('token', token);
+
+    const handleLogin = (userData) => {
+        setUserData(userData);
         setIsLoggedIn(true);
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        Cookies.remove('auth_token');
         setIsLoggedIn(false);
+        setUserData(null);
     };
 
     return (
         <div>
             {isLoggedIn ? (
-                <MainPage onLogout={handleLogout} />
+                <MainPage userData={userData} onLogout={handleLogout} />
             ) : (
                 <Login onLogin={handleLogin} />
             )}
