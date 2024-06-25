@@ -10,6 +10,12 @@ Para rodar o frontend, execute (estando na pasta woke-front) npm i e depois npm 
 
 (Se as portas 8080 ou 3000 já estiverem sendo usadas na máquina que vai executar o projeto, haverá erro).
 
+Contas para testar o funcionamento (Estão cadastradas no sqlite): 
+
+- maria@example.com / pass
+- mateus@example.com / pass
+- joao@example.com / pass
+
 Justificativa Técnica:
 -
 Utilizei o framework Ktor para o backend por acreditar que seja uma opção ágil que exige pouca configuração.
